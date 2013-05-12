@@ -1,2 +1,4 @@
 .DS_Store
 .connect.mysql
+# Python Byte Code
+*.pyc
