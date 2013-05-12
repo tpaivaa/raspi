@@ -121,6 +121,8 @@ while 1:
         attacksauna = saunaLowLimit > sauna
         attackakWcLattia = akWcLattiaLowLimit > akWcLattia
         attackKeittio = keittioLowLimit > keittio
+        varaajaCold = varaajaDown < 33
+
         
         
         if keittio < keittioLowLimit  and keittio !=0:
@@ -191,22 +193,27 @@ while 1:
                 syslog.syslog('Main pump Off')
         #Attack to help heating if needed
         #Heating needed if outtemp is less than 14 and  room temperatures lower than limits
-        if (attackkhh or attackolohuone or attackmakuuhuone or attacksauna or attackakWcLattia) and ulko < 14:
+        if (attackkhh or attackolohuone or attackmakuuhuone or attacksauna or attackakWcLattia) and ulko < 14 and varaajaCold:
             syslog.syslog('Attack tarvetta')
-            if varaajaDown < 33:
-                s.setState(8, 'LOW')
-                gpio25 = l.getRele('25')
-                syslog.syslog('Attack On')
+            s.setState(8, 'LOW')
+            gpio25 = l.getRele('25')
+            syslog.syslog('Attack On')
         else:
-            syslog.syslog('Attack taitaa olla Off')
-        if (attackkhh or attackolohuone or attackmakuuhuone or attacksauna or attackakWcLattia) != 1 and ulko > 14:
-            syslog.syslog('Attack tarvetta ei ole')
-            if varaajaDown > 35:
+            if l.getRele('25') == 0:
+                syslog.syslog('Attack taitaa olla Off')
+            else:
+                syslog.syslog('Attack tarvetta ei ole')
                 s.setState(8, 'HIGH')
                 gpio25 = l.getRele('25')
                 syslog.syslog('Attack Off')
+        if (attackkhh or attackolohuone or attackmakuuhuone or attacksauna or attackakWcLattia) != 1 and ulko > 14:
+            syslog.syslog('Attack tarvetta ei ole')
+            s.setState(8, 'HIGH')
+            gpio25 = l.getRele('25')
+            syslog.syslog('Attack Off')
         else:
-            syslog.syslog('Attack taitaa olla Off')
+            if l.getRele('25') == 0:
+                syslog.syslog('Attack taitaa olla jo Off')
 
     except Exception, e:
         syslog.syslog('kesken Meno')
@@ -234,6 +241,7 @@ while 1:
     syslog.syslog('Olohuone: ' + str(olohuone))
     syslog.syslog('Olohuone LowLimit: ' + str(olohuoneLowLimit))
     syslog.syslog('Khh ' + str(khh))
+    syslog.syslog('Ulkona ' + str(ulko))
     syslog.syslog('Sauna ' + str(sauna))
     syslog.syslog('Keittiö lattia ' + str(keittio))
     syslog.syslog('Khh Lattia ' + str(akWcLattia))
