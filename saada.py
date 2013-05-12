@@ -22,7 +22,7 @@ def initialize():
 	releet = (4,17,18,21,22,23,24,25)
 	GPIO.setmode(GPIO.BCM)
 	# Open database connection
-	db = MySQLdb.connect("sweb","lampo","lampotilat","lampotilat",use_unicode = True)
+	db = MySQLdb.connect(host="sweb",db="lampotilat",read_default_file='./.connect.mysql',use_unicode = True)
 	# prepare a cursor object using cursor() method
 	cursor = db.cursor()
 	for n in releet:
@@ -45,7 +45,7 @@ def initialize():
 
 def setState(rele, tila):
 	# Open database connection
-	db = MySQLdb.connect("sweb","lampotilat",read_default_file='./.connect.mysql',use_unicode = True)
+	db = MySQLdb.connect(host="sweb",db="lampotilat",read_default_file='./.connect.mysql',use_unicode = True)
 	# prepare a cursor object using cursor() method
 	cursor = db.cursor()
 	if rele == 1:

@@ -30,7 +30,7 @@ def getAikaNow():
 
 def latestLampo(room):
 	# Open database connection
-	db = MySQLdb.connect("sweb","lampo","lampotilat","lampotilat",use_unicode = True)
+	db = MySQLdb.connect(host="sweb",db="lampotilat",read_default_file='./.connect.mysql',use_unicode = True)
 	# prepare a cursor object using cursor() method
 	cursor = db.cursor()
 	sql = "SELECT celsius FROM lampotilat WHERE sensor = '%s' ORDER BY tKey DESC LIMIT 1" % (room)
@@ -49,7 +49,7 @@ def latestLampo(room):
     
 def getRele(gpio):
 	# Open database connection
-	db = MySQLdb.connect("sweb","lampo","lampotilat","lampotilat",use_unicode = True)
+	db = MySQLdb.connect(host="sweb",db="lampotilat",read_default_file='./.connect.mysql',use_unicode = True)
 	# prepare a cursor object using cursor() method
 	cursor = db.cursor()
 	sql = "SELECT state FROM reletilat WHERE gpio = '%s'" % (gpio)
